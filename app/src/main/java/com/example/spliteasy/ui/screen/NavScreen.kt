@@ -6,40 +6,46 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.spliteasy.ui.screen.group.BottomScreen
+import com.example.spliteasy.viewmodel.SplitViewModel
 
 
 @Composable
-fun NavScreen() {
+fun NavScreen(viewModel: SplitViewModel) {
    var navController = rememberNavController()
-   NavHost(navController = navController, startDestination = "bottom")
+   NavHost(navController = navController, startDestination = "group")
    {
       composable("group")
       {
-            GroupScreen(navController)
+            GroupScreen(navController,viewModel)
       }
       composable("account")
       {
-         AccountScreen(navController)
+         AccountScreen(navController,viewModel)
       }
       composable("profile")
       {
-         ProfileScreen(navController)
+         ProfileScreen(navController,viewModel)
       }
       composable("newTrip")
       {
-         NewTripScreen(navController)
+         NewTripScreen(navController,viewModel)
       }
       composable("contact")
       {
-         ContactScreen(navController)
+         ContactScreen(navController,viewModel)
       }
       composable("dashboard")
       {
-         DashBoardScreen(navController)
+         DashBoardScreen(navController,viewModel)
       }
       composable("bottom")
       {
-         BottomScreen(navController)
+         BottomScreen(navController,viewModel)
+      }
+      composable("expense")
+      {
+         ExpenseScreen(navController,viewModel)
       }
    }
 }

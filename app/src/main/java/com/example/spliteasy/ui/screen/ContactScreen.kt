@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,20 +30,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.spliteasy.db.model.User
 import com.example.spliteasy.ui.componet.CustomButton
 import com.example.spliteasy.ui.componet.TopBar
 import com.example.spliteasy.ui.theme.Gray
 import com.example.spliteasy.ui.theme.Purple40
 import com.example.spliteasy.ui.theme.PurpleGrey40
+import com.example.spliteasy.viewmodel.SplitViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ContactScreen(navController: NavHostController) {
+fun ContactScreen(navController: NavHostController, viewModel: SplitViewModel) {
 
     var txtName = remember {
         mutableStateOf("")
     }
+    var txtMobile = remember {
+        mutableStateOf("")
+    }
+    var txtEmail = remember {
+        mutableStateOf("")
+    }
+
+    var contextCoroutine = rememberCoroutineScope()
+
 
     Scaffold {
         Column {
@@ -102,9 +115,9 @@ fun ContactScreen(navController: NavHostController) {
                     ) {
 
                         BasicTextField(
-                            value = txtName.value,
+                            value = txtMobile.value,
                             onValueChange = {
-                                txtName.value = it
+                                txtMobile.value = it
                             },
                             textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
                             modifier = Modifier
@@ -131,9 +144,9 @@ fun ContactScreen(navController: NavHostController) {
                     ) {
 
                         BasicTextField(
-                            value = txtName.value,
+                            value = txtEmail.value,
                             onValueChange = {
-                                txtName.value = it
+                                txtEmail.value = it
                             },
                             textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
                             modifier = Modifier
@@ -145,7 +158,20 @@ fun ContactScreen(navController: NavHostController) {
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
-                CustomButton("Submit")
+
+                CustomButton("Submit") {
+                    viewModel.repo.addUser(
+                        User(
+                            name = txtName.value,
+                            phone = txtMobile.value,
+                            email = txtEmail.value
+                        )
+                    )
+                    contextCoroutine.launch{
+                        viewModel.getUsers()
+                    }
+                }
+
             }
         }
     }

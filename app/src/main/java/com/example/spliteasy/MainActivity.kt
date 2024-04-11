@@ -1,18 +1,23 @@
 package com.example.spliteasy
 
-import GroupScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.ViewModelProvider
 import com.example.spliteasy.ui.screen.NavScreen
 import com.example.spliteasy.ui.theme.SpliteasyTheme
+import com.example.spliteasy.viewmodel.SplitViewModel
+import com.example.spliteasy.viewmodel.SplitViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var viewModel:SplitViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this,SplitViewModelFactory(this))[SplitViewModel::class.java]
         setContent {
             SpliteasyTheme {
-                NavScreen()
+                NavScreen(viewModel)
             }
         }
     }

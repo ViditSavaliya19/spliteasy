@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -36,10 +35,11 @@ import com.example.spliteasy.ui.theme.Gray
 import com.example.spliteasy.ui.theme.Purple40
 import com.example.spliteasy.ui.theme.PurpleGrey40
 import com.example.spliteasy.ui.theme.White
+import com.example.spliteasy.viewmodel.SplitViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AccountScreen(navController: NavHostController) {
+fun AccountScreen(navController: NavHostController, viewModel: SplitViewModel) {
 
     Scaffold {
         Column {

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +31,6 @@ import androidx.navigation.NavHostController
 import com.example.spliteasy.ui.theme.Purple40
 import com.example.spliteasy.ui.theme.White
 
-@Preview
 @Composable
 fun TopBar(navController: NavHostController, icon: ImageVector, s: String, s1: String?=null) {
     Column {
@@ -40,7 +40,11 @@ fun TopBar(navController: NavHostController, icon: ImageVector, s: String, s1: S
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, tint = Purple40, contentDescription = null)
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(icon, tint = Purple40, contentDescription = null)
+            }
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                     s,
@@ -51,9 +55,12 @@ fun TopBar(navController: NavHostController, icon: ImageVector, s: String, s1: S
                 ),
                 modifier = Modifier.weight(1f)
             )
-            Box(Modifier.clip(shape = RoundedCornerShape(20f)).clickable {
-                navController.navigate("account")
-            }) {
+            Box(
+                Modifier
+                    .clip(shape = RoundedCornerShape(20f))
+                    .clickable {
+                        navController.navigate("account")
+                    }) {
                 Box(
                     modifier = Modifier
                         .height(40.dp)

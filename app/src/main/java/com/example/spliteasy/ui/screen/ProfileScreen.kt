@@ -2,6 +2,7 @@ package com.example.spliteasy.ui.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,18 +29,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.spliteasy.db.model.User
 import com.example.spliteasy.ui.componet.CustomButton
 import com.example.spliteasy.ui.componet.TopBar
 import com.example.spliteasy.ui.theme.Gray
 import com.example.spliteasy.ui.theme.Purple40
 import com.example.spliteasy.ui.theme.PurpleGrey40
+import com.example.spliteasy.viewmodel.SplitViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(navController: NavHostController, viewModel: SplitViewModel) {
 
     var txtName = remember {
+        mutableStateOf("")
+    }
+    var txtMobile = remember {
+        mutableStateOf("")
+    }
+    var txtEmail = remember {
         mutableStateOf("")
     }
 
@@ -76,7 +85,7 @@ fun ProfileScreen(navController: NavHostController) {
                             onValueChange = {
                                 txtName.value = it
                             },
-                             textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
+                            textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
                             modifier = Modifier
                                 .padding(horizontal = 10.dp)
                                 .fillMaxWidth()
@@ -101,9 +110,9 @@ fun ProfileScreen(navController: NavHostController) {
                     ) {
 
                         BasicTextField(
-                            value = txtName.value,
+                            value = txtMobile.value,
                             onValueChange = {
-                                txtName.value = it
+                                txtMobile.value = it
                             },
                             textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
                             modifier = Modifier
@@ -130,9 +139,9 @@ fun ProfileScreen(navController: NavHostController) {
                     ) {
 
                         BasicTextField(
-                            value = txtName.value,
+                            value = txtEmail.value,
                             onValueChange = {
-                                txtName.value = it
+                                txtEmail.value = it
                             },
                             textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
                             modifier = Modifier
@@ -144,7 +153,17 @@ fun ProfileScreen(navController: NavHostController) {
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
-                CustomButton("Save")
+
+                CustomButton("Save") {
+                    viewModel.repo.addUser(
+                        User(
+                            name = txtName.value,
+                            phone = txtMobile.value,
+                            email = txtEmail.value
+                        )
+                    )
+
+                }
 
             }
         }

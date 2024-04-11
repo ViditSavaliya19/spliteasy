@@ -45,14 +45,14 @@ fun SpliteasyTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//            val context = LocalContext.current
+//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//        }
 
 //        darkTheme -> DarkColorScheme
-        darkTheme -> LightColorScheme
-        else -> LightColorScheme
+        darkTheme -> LightColorScheme.copy(primary = Purple40, onPrimary = PurpleGrey40, primaryContainer = Purple40, onPrimaryContainer = Purple40,)
+        else -> LightColorScheme.copy(primary = Purple40, onPrimary = PurpleGrey40, primaryContainer = Purple40)
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
