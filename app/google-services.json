@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460298281378",
+    "project_id": "spliteasy-d39ae",
+    "storage_bucket": "spliteasy-d39ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460298281378:android:bc9536bd8713a7bfc452fb",
+        "android_client_info": {
+          "package_name": "com.group.spliteasy.vd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKxcBHDnfa11NULcenFvQmCy8fm2KW6Rc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

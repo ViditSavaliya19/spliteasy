@@ -20,7 +20,7 @@ import com.example.spliteasy.ui.theme.White
 
 
 @Composable
-fun CustomButton( s: String, fs: Int = 18,onClick: () -> Unit) {
+fun CustomButton( s: String, fs: Int = 18,onClick:() -> Unit) {
     Box(modifier = Modifier
         .clip(shape = RoundedCornerShape(20f)).clickable { onClick() }
        ) {

@@ -58,7 +58,7 @@ fun DashBoardScreen(navController: NavHostController, viewModel: SplitViewModel)
         },
         modifier = Modifier.height((LocalConfiguration.current.screenHeightDp - 90).dp)
     ) {
-        TopBar(navController = navController, icon = Icons.Filled.ArrowBack, s = "Dashboard")
+        TopBar(navController = navController, icon = Icons.Filled.ArrowBack, s = "Dashboard"){}
         Column(
             modifier = Modifier.padding(
                 top = 70.dp,

@@ -20,10 +20,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.spliteasy.domain.FireAuthHelper
 import com.example.spliteasy.ui.componet.TopBar
 import com.example.spliteasy.ui.theme.Gray
 import com.example.spliteasy.ui.theme.Purple40
@@ -46,90 +53,106 @@ import kotlinx.coroutines.launch
 @Composable
 fun GroupScreen(navController: NavHostController, viewModel: SplitViewModel) {
     val trips = viewModel.trip.observeAsState(null)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var coroutineContext = rememberCoroutineScope()
 
-    Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = {
-            navController.navigate("newTrip")
-        }) {
-            Icon(Icons.Default.Add, contentDescription = null)
-        }
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+        Drawer(navController)
     }) {
-        Column {
-            TopBar(navController, Icons.Filled.Menu, "spliteasy", "account")
-            Spacer(
-                Modifier.height(10.dp)
-            )
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    navController.navigate("newTrip")
+                }) {
+                    Icon(Icons.Default.Add, contentDescription = null)
+                }
+            },
+        ) {
+            Column {
+                TopBar(navController, Icons.Filled.Menu, "spliteasy", "account") {
+                    coroutineContext.launch {
+                        drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
+                }
+                Spacer(
+                    Modifier.height(10.dp)
+                )
 
-            LazyColumn(
-                contentPadding = PaddingValues(10.dp),
-                content = {
-                    trips.value?.let { it1 ->
-                        items(it1.size)
-                        {
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Box(
-                                Modifier
-                                    .clip(shape = RoundedCornerShape(20f))
-                                    .clickable {
-                                        coroutineContext.launch{
-                                            viewModel.selectedTrip = it1[it]
-                                            viewModel.getTripWithUsers()
-                                            viewModel.getExpense()
-//                                            viewModel.getExpenseWithUser()
-                                            navController.navigate("bottom")
-                                        }
-                                    }
-                            ) {
+                LazyColumn(
+                    contentPadding = PaddingValues(10.dp),
+                    content = {
+                        trips.value?.let { it1 ->
+                            items(it1.size)
+                            {
+                                Spacer(modifier = Modifier.height(10.dp))
                                 Box(
                                     Modifier
-                                        .background(color = PurpleGrey40)
-                                        .height(100.dp)
-                                        .fillMaxWidth()
-
-                                ) {
-                                    Column(
-                                        Modifier
-                                            .padding(10.dp)
-                                            .fillMaxHeight(),
-                                        verticalArrangement = Arrangement.SpaceEvenly
-                                    ) {
-                                        Row(
-                                            Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                        ) {
-
-                                            Text(
-                                                "${trips.value!![it].name}",
-                                                style = TextStyle(fontSize = 18.sp, color = Purple40)
-                                            )
-                                            Text("16 Mar 2024", style = TextStyle(color = Gray))
-
-                                        }
-                                        Divider(color = Gray, thickness = 0.5.dp)
-                                        Row(
-                                            Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Row {
-                                                NameBox(25, 25, "V")
-                                                NameBox(25, 25, "V")
-                                                NameBox(25, 25, "V")
+                                        .clip(shape = RoundedCornerShape(20f))
+                                        .clickable {
+                                            coroutineContext.launch {
+                                                viewModel.selectedTrip = it1[it]
+                                                viewModel.getTripWithUsers()
+                                                viewModel.getExpense()
+                                                //                                            viewModel.getExpenseWithUser()
+                                                navController.navigate("bottom")
                                             }
-                                            Icon(
-                                                Icons.Filled.ArrowForward,
-                                                tint = Gray,
-                                                contentDescription = null,
-                                            )
+                                        }
+                                ) {
+                                    Box(
+                                        Modifier
+                                            .background(color = PurpleGrey40)
+                                            .height(100.dp)
+                                            .fillMaxWidth()
+
+                                    ) {
+                                        Column(
+                                            Modifier
+                                                .padding(10.dp)
+                                                .fillMaxHeight(),
+                                            verticalArrangement = Arrangement.SpaceEvenly
+                                        ) {
+                                            Row(
+                                                Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                            ) {
+
+                                                Text(
+                                                    "${trips.value!![it].name}",
+                                                    style = TextStyle(
+                                                        fontSize = 18.sp,
+                                                        color = Purple40
+                                                    )
+                                                )
+                                                Text("16 Mar 2024", style = TextStyle(color = Gray))
+
+                                            }
+                                            Divider(color = Gray, thickness = 0.5.dp)
+                                            Row(
+                                                Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Row {
+                                                    NameBox(25, 25, "V")
+                                                    NameBox(25, 25, "V")
+                                                    NameBox(25, 25, "V")
+                                                }
+                                                Icon(
+                                                    Icons.Filled.ArrowForward,
+                                                    tint = Gray,
+                                                    contentDescription = null,
+                                                )
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-            )
+                    },
+                )
 
+            }
         }
     }
 
@@ -150,4 +173,24 @@ fun NameBox(h: Int, w: Int, lable: String) {
 
         }
     }
+}
+
+@Composable
+fun Drawer(navController: NavHostController) {
+
+    ModalDrawerSheet {
+
+        Text("Drawer title", modifier = Modifier.padding(16.dp))
+        HorizontalDivider()
+        NavigationDrawerItem(
+            label = { Text(text = "Logout") },
+            selected = false,
+            onClick = {
+                FireAuthHelper.helper.signOut()
+                navController.navigate("login")
+            }
+        )
+
+    }
+
 }

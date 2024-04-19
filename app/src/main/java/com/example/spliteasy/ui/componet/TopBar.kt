@@ -32,7 +32,7 @@ import com.example.spliteasy.ui.theme.Purple40
 import com.example.spliteasy.ui.theme.White
 
 @Composable
-fun TopBar(navController: NavHostController, icon: ImageVector, s: String, s1: String?=null) {
+fun TopBar(navController: NavHostController, icon: ImageVector, s: String, s1: String?=null,leadClick : () -> Unit) {
     Column {
         Row(
             modifier = Modifier
@@ -41,7 +41,7 @@ fun TopBar(navController: NavHostController, icon: ImageVector, s: String, s1: S
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = {
-                navController.popBackStack()
+                leadClick()
             }) {
                 Icon(icon, tint = Purple40, contentDescription = null)
             }

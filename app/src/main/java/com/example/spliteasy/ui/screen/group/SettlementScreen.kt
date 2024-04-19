@@ -52,7 +52,7 @@ fun SettlementScreen(navController: NavHostController, viewModel: SplitViewModel
 
     ) {
         Scaffold {
-            TopBar(navController = navController, icon = Icons.Filled.ArrowBack, s = "Settlement")
+            TopBar(navController = navController, icon = Icons.Filled.ArrowBack, s = "Settlement"){}
             Column(
                 modifier = Modifier.padding(
                     top = 70.dp, start = 10.dp, end = 10.dp, bottom = 10.dp

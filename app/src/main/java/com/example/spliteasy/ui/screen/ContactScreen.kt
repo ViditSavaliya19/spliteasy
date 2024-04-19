@@ -63,7 +63,7 @@ fun ContactScreen(navController: NavHostController, viewModel: SplitViewModel) {
                 navController = navController,
                 icon = Icons.Filled.ArrowBack,
                 s = "Add a new contact"
-            )
+            ){}
             Column(modifier = Modifier.padding(10.dp)) {
                 Row {
                     Text(

@@ -95,7 +95,7 @@ fun ExpenseScreen(navController: NavHostController, viewModel: SplitViewModel) {
     }
 
     Scaffold() {
-        TopBar(navController = navController, icon = Icons.Default.ArrowBack, s = "Add Expense")
+        TopBar(navController = navController, icon = Icons.Default.ArrowBack, s = "Add Expense"){}
 
         Column(
             modifier = Modifier

@@ -35,7 +35,7 @@ fun ReportScreen(navController: NavHostController, viewModel: SplitViewModel) {
 
     ) {
         Scaffold {
-            TopBar(navController = navController, icon = Icons.Filled.ArrowBack, s = "Report")
+            TopBar(navController = navController, icon = Icons.Filled.ArrowBack, s = "Report"){}
             Box(
                 modifier = Modifier
                     .padding(top = 60.dp, start = 10.dp, end = 10.dp)

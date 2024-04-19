@@ -74,7 +74,7 @@ fun NewTripScreen(navController: NavHostController, viewModel: SplitViewModel) {
 
     Scaffold {
         Column {
-            TopBar(navController, Icons.Filled.ArrowBack, "Account")
+            TopBar(navController, Icons.Filled.ArrowBack, "Account"){}
             Spacer(modifier = Modifier.height(10.dp))
             Column(modifier = Modifier.padding(10.dp)) {
                 TextField(
