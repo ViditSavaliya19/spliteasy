@@ -1,6 +1,8 @@
 package com.example.spliteasy.ui.screen
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,11 +56,12 @@ fun ContactScreen(navController: NavHostController, viewModel: SplitViewModel) {
     var txtEmail = remember {
         mutableStateOf("")
     }
-
+    var context: Context
     var contextCoroutine = rememberCoroutineScope()
 
 
     Scaffold {
+        context = LocalContext.current
         Column {
             TopBar(
                 navController = navController,
@@ -122,9 +126,9 @@ fun ContactScreen(navController: NavHostController, viewModel: SplitViewModel) {
                             textStyle = TextStyle(color = Purple40, fontWeight = FontWeight.Bold),
                             modifier = Modifier
                                 .padding(horizontal = 10.dp)
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
 
-                        )
+                            )
 
                     }
                 }
@@ -160,15 +164,23 @@ fun ContactScreen(navController: NavHostController, viewModel: SplitViewModel) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 CustomButton("Submit") {
-                    viewModel.repo.addUser(
-                        User(
-                            name = txtName.value,
-                            phone = txtMobile.value,
-                            email = txtEmail.value
+                    if (txtName.value.isNotEmpty() && txtMobile.value.isNotEmpty()) {
+                        viewModel.repo.addUser(
+                            User(
+                                name = txtName.value,
+                                phone = txtMobile.value,
+                                email = txtEmail.value
+                            )
                         )
-                    )
-                    contextCoroutine.launch{
-                        viewModel.getUsers()
+                        contextCoroutine.launch {
+                            viewModel.getUsers()
+                        }
+                        Toast.makeText(context, "Contact Saved", Toast.LENGTH_SHORT)
+                            .show()
+                        navController.popBackStack()
+                    } else {
+                        Toast.makeText(context, "Name & Mobile Both are required", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
 

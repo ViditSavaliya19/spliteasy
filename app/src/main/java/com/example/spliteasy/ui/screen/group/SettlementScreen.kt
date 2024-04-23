@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,9 +45,8 @@ import com.example.spliteasy.viewmodel.SplitViewModel
 @Composable
 fun SettlementScreen(navController: NavHostController, viewModel: SplitViewModel) {
 
-    var list = remember {
-            viewModel.finalSettlementList.value
-        }
+    var list = viewModel.finalSettlementList.observeAsState(null)
+
 
     Scaffold(
 
@@ -67,7 +67,7 @@ fun SettlementScreen(navController: NavHostController, viewModel: SplitViewModel
                     }
                 }
                 LazyColumn(content = {
-                    list?.let { it1 ->
+                    list.value?.let { it1 ->
                         items(count = it1.count()) {
                             Box(modifier = Modifier
                                 .fillMaxWidth()

@@ -2,7 +2,9 @@ package com.example.spliteasy.ui.screen
 
 import NameBox
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -70,9 +72,11 @@ fun NewTripScreen(navController: NavHostController, viewModel: SplitViewModel) {
     val selectedList = remember { user.value!!.map { false }.toMutableStateList() }
     var selectedUserList = remember { mutableStateListOf<User>() }
     var contextCoroutine = rememberCoroutineScope()
+    var context:Context
 
 
     Scaffold {
+        context = LocalContext.current
         Column {
             TopBar(navController, Icons.Filled.ArrowBack, "Account"){}
             Spacer(modifier = Modifier.height(10.dp))
@@ -162,18 +166,22 @@ fun NewTripScreen(navController: NavHostController, viewModel: SplitViewModel) {
                 })
 
                 CustomButton(s = "Submit") {
-
-                    contextCoroutine.launch {
-                        var tripId = viewModel.repo.addTrip(Trip(name = txtTripName.value))
-                        var tripList = selectedUserList.map {
-                            TripUser(
-                                trip_id = tripId.toInt(),
-                                user_id = it.user_id
-                            )
+                    if (txtTripName.value.isNotEmpty() && selectedUserList.size>=1) {
+                        contextCoroutine.launch {
+                            var tripId = viewModel.repo.addTrip(Trip(name = txtTripName.value))
+                            var tripList = selectedUserList.map {
+                                TripUser(
+                                    trip_id = tripId.toInt(),
+                                    user_id = it.user_id
+                                )
+                            }
+                            viewModel.repo.addTripUsers(tripList)
+                            viewModel.getTrip()
+                            navController.popBackStack()
                         }
-                        viewModel.repo.addTripUsers(tripList)
-                        viewModel.getTrip()
-                        navController.popBackStack()
+                    }
+                    else{
+                        Toast.makeText(context, "Trip name or member must be required", Toast.LENGTH_SHORT).show()
                     }
 
                 }

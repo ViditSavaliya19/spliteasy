@@ -7,30 +7,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.spliteasy.ui.screen.group.BottomScreen
-import com.example.spliteasy.ui.screen.login.view.LoginScreen
-import com.example.spliteasy.ui.screen.login.view.SignUpScreen
-import com.example.spliteasy.ui.screen.login.viewmodel.LoginViewModel
-import com.example.spliteasy.ui.screen.splash.SplashScreen
 import com.example.spliteasy.viewmodel.SplitViewModel
 
 
 @Composable
-fun NavScreen(viewModel: SplitViewModel, loginViewModel: LoginViewModel) {
+fun NavScreen(viewModel: SplitViewModel) {
    var navController = rememberNavController()
-   NavHost(navController = navController, startDestination = "splash")
+   NavHost(navController = navController, startDestination = "group")
    {
-      composable("splash")
-      {
-         SplashScreen(loginViewModel,navController)
-      }
-      composable("login")
-      {
-         LoginScreen(loginViewModel,navController)
-      }
-      composable("signup")
-      {
-         SignUpScreen(loginViewModel,navController)
-      }
+//      composable("splash")
+//      {
+//         SplashScreen(loginViewModel,navController)
+//      }
+//      composable("login")
+//      {
+//         LoginScreen(loginViewModel,navController)
+//      }
+//      composable("signup")
+//      {
+//         SignUpScreen(loginViewModel,navController)
+//      }
       composable("group")
       {
             GroupScreen(navController,viewModel)

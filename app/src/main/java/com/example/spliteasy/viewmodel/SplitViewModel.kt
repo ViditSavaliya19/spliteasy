@@ -78,6 +78,7 @@ class SplitViewModel(context: Context) : ViewModel() {
     }
 
     suspend fun getExpense() {
+        list.clear()
 
         _expenseList.value = repo.getExpense(selectedTrip!!.trip_id.toLong())
 
@@ -110,6 +111,7 @@ class SplitViewModel(context: Context) : ViewModel() {
                 )
             )
         }
+
 
         countSettlement()
 
@@ -173,6 +175,8 @@ class SplitViewModel(context: Context) : ViewModel() {
                 var sumPaidAmount = sameUserList.sumOf {
                     it.amount
                 }
+                Log.e("TAG", "Paid UserList User list: ${x.name} ${sumPaidAmount}")
+
                 paidUserList.add(ExpenseUserTransactionModel(paidBy = x, amount = sumPaidAmount))
             }
         }
@@ -181,6 +185,7 @@ class SplitViewModel(context: Context) : ViewModel() {
 
         for (i in 0..<paidUserList.size) {
             //Amount = totalExpense - UserExpense
+
             settelmentList.add(
                 ExpenseUserTransactionModel(
                     paidBy = paidUserList[i].paidBy,
@@ -189,44 +194,63 @@ class SplitViewModel(context: Context) : ViewModel() {
             )
         }
 
+        userWiseExpense.map {
+            Log.e("TAG", "Expense User list: ${it.paidBy.name} ${it.amount}")
+        }
+
+//        paidUserList.map {
+//            Log.e("TAG", "Paid User list: ${it.paidBy.name} ${it.amount}")
+//        }
+
+        settelmentList.map {
+            Log.e("TAG", "SettlementList: ${it.paidBy.name} ${it.amount}")
+        }
+
         var fromList = settelmentList.filter {
-            it.amount<0
+            it.amount < 0
         }
 
         var toList = settelmentList.filter {
-            it.amount>0
+            it.amount > 0
         }
 
         Log.e("TAG", "From list ====== ")
 
         fromList.map {
-            Log.e("TAG", "countSettlement: ${it.paidBy.name} ${it.amount}" , )
+            Log.e("TAG", "countSettlement1: ${it.paidBy.name} ${it.amount}")
         }
 
         Log.e("TAG", "To list ====== ")
 
         toList.map {
-            Log.e("TAG", "countSettlement: ${it.paidBy.name} ${it.amount}" , )
+            Log.e("TAG", "countSettlement2: ${it.paidBy.name} ${it.amount}")
         }
 
         var finalList = arrayListOf<SettlementModel>()
 
-        for(i in 0..<fromList.size)
-        {
+        for (i in 0..<fromList.size) {
             fromList[i].amount = Math.abs(fromList[i].amount)
 
-            for (j in 0..<toList.size)
-            {
-                if(fromList[i].amount > toList[j].amount)
-                {
+            for (j in 0..<toList.size) {
+                if (fromList[i].amount > toList[j].amount) {
                     fromList[i].amount = fromList[i].amount - toList[j].amount
-                    finalList.add(SettlementModel(from = fromList[i].paidBy.name,to = toList[j].paidBy.name, amount = toList[j].amount.toDouble()))
+                    finalList.add(
+                        SettlementModel(
+                            from = fromList[i].paidBy.name,
+                            to = toList[j].paidBy.name,
+                            amount = toList[j].amount.toDouble()
+                        )
+                    )
 
-                }
-                else if(fromList[i].amount < toList[j].amount)
-                {
+                } else if (fromList[i].amount < toList[j].amount) {
                     toList[j].amount = toList[j].amount - fromList[i].amount
-                    finalList.add(SettlementModel(from = fromList[i].paidBy.name,to = toList[j].paidBy.name, amount = fromList[i].amount.toDouble()))
+                    finalList.add(
+                        SettlementModel(
+                            from = fromList[i].paidBy.name,
+                            to = toList[j].paidBy.name,
+                            amount = fromList[i].amount.toDouble()
+                        )
+                    )
                     fromList[i].amount = 0
 
                 }
@@ -234,6 +258,6 @@ class SplitViewModel(context: Context) : ViewModel() {
 
         }
         _finalSettlementList.value = finalList
-        finalList.map { Log.e("TAG", "countSettlement: ${it.from} > ${it.to} = ${it.amount}", ) }
+        finalList.map { Log.e("TAG", "countSettlement3: ${it.from} > ${it.to} = ${it.amount}") }
     }
 }

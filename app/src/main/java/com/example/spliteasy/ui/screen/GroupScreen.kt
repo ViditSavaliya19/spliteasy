@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -40,7 +39,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.spliteasy.domain.FireAuthHelper
 import com.example.spliteasy.ui.componet.TopBar
 import com.example.spliteasy.ui.theme.Gray
 import com.example.spliteasy.ui.theme.Purple40
@@ -181,15 +179,15 @@ fun Drawer(navController: NavHostController) {
     ModalDrawerSheet {
 
         Text("Drawer title", modifier = Modifier.padding(16.dp))
-        HorizontalDivider()
-        NavigationDrawerItem(
-            label = { Text(text = "Logout") },
-            selected = false,
-            onClick = {
-                FireAuthHelper.helper.signOut()
-                navController.navigate("login")
-            }
-        )
+//        HorizontalDivider()
+//        NavigationDrawerItem(
+//            label = { Text(text = "Logout") },
+//            selected = false,
+//            onClick = {
+//                FireAuthHelper.helper.signOut()
+//                navController.navigate("login")
+//            }
+//        )
 
     }
 
