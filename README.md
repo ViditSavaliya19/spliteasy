@@ -17,7 +17,7 @@ I harnessed the power of Jetpack Compose, Room (for local data storage), and the
 ## MVVM Architecture: 
 - By adopting the Model-View-ViewModel pattern, I achieved separation of concerns, making my codebase more maintainable and testable.
 
-# 🌟 Key Takeaways:
+## 🌟 Key Takeaways:
 
 ## Less Code, More Magic: 
 - Jetpack Compose allowed me to build complex UIs with minimal code. It’s like painting with pixels!
