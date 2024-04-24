@@ -53,6 +53,7 @@ fun DashBoardScreen(navController: NavHostController, viewModel: SplitViewModel)
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
+                viewModel.selectedExpense=null
                 navController.navigate("expense")
             }, content = { Icon(Icons.Filled.Add, contentDescription = null) })
         },

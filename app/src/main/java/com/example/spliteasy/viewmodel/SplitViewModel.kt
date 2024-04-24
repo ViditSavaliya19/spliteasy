@@ -95,7 +95,7 @@ class SplitViewModel(context: Context) : ViewModel() {
             var splitMember = arrayListOf<SplitUser>()
 
             var transactionAll = repo.getTransaction(x.expense_id.toLong())
-            var userOfTransaction = transactionAll.map {
+            transactionAll.map {
                 splitMember.add(
                     SplitUser(
                         user = repo.getUserWithId(it.user_id),
@@ -113,7 +113,8 @@ class SplitViewModel(context: Context) : ViewModel() {
         }
 
 
-        countSettlement()
+//        countSettlement()
+        newCountSettlement()
 
     }
 
@@ -147,10 +148,14 @@ class SplitViewModel(context: Context) : ViewModel() {
         return updateUser
     }
 
-    fun countSettlement() {
-        var userWiseExpense = arrayListOf<ExpenseUserTransactionModel>()
-        var paidUserList = arrayListOf<ExpenseUserTransactionModel>()
-        for (x in _usersList.value!!) {
+    fun newCountSettlement(){
+        var creditUserList = List(tripUser.value!!.size){
+                it -> ExpenseUserTransactionModel(paidBy = tripUser.value!![it], amount = 0);
+        }.toMutableList()
+        var debitUserList = List(tripUser.value!!.size){ it -> ExpenseUserTransactionModel(paidBy = tripUser.value!![it], amount = 0);
+        }.toMutableList()
+        for( x in tripUser.value!!)
+        {
             var sameUserList = list.filter {
                 it.paidBy.user_id == x.user_id
             }
@@ -163,47 +168,60 @@ class SplitViewModel(context: Context) : ViewModel() {
                     it.amount
                 }
 
-                userWiseExpense.add(
-                    ExpenseUserTransactionModel(
-                        paidBy = x,
-                        amount = sumOfSingleUserExpense.toInt()
-                    )
-                )
+                debitUserList.mapIndexed(){index, it ->
+                    if(debitUserList[index].paidBy.user_id ==x.user_id) {
+                        debitUserList[index]= ExpenseUserTransactionModel(
+                            paidBy = x,
+                            amount = sumOfSingleUserExpense.toInt()
+                        )
+                    }
+                }
             }
 
             if (sameUserList.isNotEmpty()) {
                 var sumPaidAmount = sameUserList.sumOf {
                     it.amount
                 }
-                Log.e("TAG", "Paid UserList User list: ${x.name} ${sumPaidAmount}")
+//                Log.e("TAG", "Paid UserList User list: ${x.name} ${sumPaidAmount}")
 
-                paidUserList.add(ExpenseUserTransactionModel(paidBy = x, amount = sumPaidAmount))
+//                paidUserList.add(ExpenseUserTransactionModel(paidBy = x, amount = sumPaidAmount))
+
+                creditUserList.mapIndexed() {index,it->
+                    if(it.paidBy.user_id == x.user_id) {
+                        creditUserList[index] = ExpenseUserTransactionModel(paidBy = x, amount = sumPaidAmount)
+                    }
+                }
+
             }
+        }
+
+        creditUserList.map {
+            Log.e("TAG", "Credit: ${it.paidBy} = ${it.amount}" )
+        }
+
+        Log.i("TAG", "newCountSettlement: ================================")
+
+        debitUserList.map {
+            Log.e("TAG", "Debit: ${it.paidBy} = ${it.amount}" )
         }
 
         var settelmentList = arrayListOf<ExpenseUserTransactionModel>()
 
-        for (i in 0..<paidUserList.size) {
+        for (i in 0..<debitUserList.size) {
             //Amount = totalExpense - UserExpense
 
             settelmentList.add(
                 ExpenseUserTransactionModel(
-                    paidBy = paidUserList[i].paidBy,
-                    amount = paidUserList.get(i).amount - userWiseExpense.get(i).amount
+                    paidBy = creditUserList[i].paidBy,
+                    amount = creditUserList.get(i).amount - debitUserList.get(i).amount
                 )
             )
         }
 
-        userWiseExpense.map {
-            Log.e("TAG", "Expense User list: ${it.paidBy.name} ${it.amount}")
-        }
-
-//        paidUserList.map {
-//            Log.e("TAG", "Paid User list: ${it.paidBy.name} ${it.amount}")
-//        }
+        Log.i("TAG", "newCountSettlement: ================================")
 
         settelmentList.map {
-            Log.e("TAG", "SettlementList: ${it.paidBy.name} ${it.amount}")
+            Log.e("TAG", "newCountSettlement: ${it.paidBy.name} ${it.amount}" )
         }
 
         var fromList = settelmentList.filter {
@@ -214,13 +232,14 @@ class SplitViewModel(context: Context) : ViewModel() {
             it.amount > 0
         }
 
-        Log.e("TAG", "From list ====== ")
+
+        Log.d("TAG", "From list ====== ")
 
         fromList.map {
             Log.e("TAG", "countSettlement1: ${it.paidBy.name} ${it.amount}")
         }
 
-        Log.e("TAG", "To list ====== ")
+        Log.d("TAG", "To list ====== ")
 
         toList.map {
             Log.e("TAG", "countSettlement2: ${it.paidBy.name} ${it.amount}")
@@ -228,10 +247,10 @@ class SplitViewModel(context: Context) : ViewModel() {
 
         var finalList = arrayListOf<SettlementModel>()
 
-        for (i in 0..<fromList.size) {
+        for (i in fromList.indices) {
             fromList[i].amount = Math.abs(fromList[i].amount)
 
-            for (j in 0..<toList.size) {
+            for (j in toList.indices) {
                 if (fromList[i].amount > toList[j].amount) {
                     fromList[i].amount = fromList[i].amount - toList[j].amount
                     finalList.add(
@@ -241,8 +260,9 @@ class SplitViewModel(context: Context) : ViewModel() {
                             amount = toList[j].amount.toDouble()
                         )
                     )
-
-                } else if (fromList[i].amount < toList[j].amount) {
+                    toList[j].amount=0
+                }
+                else if (fromList[i].amount <= toList[j].amount) {
                     toList[j].amount = toList[j].amount - fromList[i].amount
                     finalList.add(
                         SettlementModel(
@@ -252,12 +272,14 @@ class SplitViewModel(context: Context) : ViewModel() {
                         )
                     )
                     fromList[i].amount = 0
-
+                    break
                 }
             }
-
         }
+        Log.i("TAG", "newCountSettlement: ================================")
+
         _finalSettlementList.value = finalList
         finalList.map { Log.e("TAG", "countSettlement3: ${it.from} > ${it.to} = ${it.amount}") }
     }
+
 }
