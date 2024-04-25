@@ -17,6 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.spliteasy.ui.componet.TopBar
+import com.example.spliteasy.ui.theme.Blue
+import com.example.spliteasy.ui.theme.Green
+import com.example.spliteasy.ui.theme.Magenta
+import com.example.spliteasy.ui.theme.Orange
+import com.example.spliteasy.ui.theme.Pink
+import com.example.spliteasy.ui.theme.Red
+import com.example.spliteasy.ui.theme.Yellow
 import com.example.spliteasy.viewmodel.SplitViewModel
 import me.bytebeats.views.charts.pie.PieChart
 import me.bytebeats.views.charts.pie.PieChartData
@@ -30,6 +37,8 @@ fun ReportScreen(navController: NavHostController, viewModel: SplitViewModel) {
     var list = remember {
         viewModel.finalSettlementList.value
     }
+
+    var colorList = arrayOf(Red, Green, Yellow, Blue, Pink, Orange, Magenta)
 
     Scaffold(
 
@@ -47,10 +56,10 @@ fun ReportScreen(navController: NavHostController, viewModel: SplitViewModel) {
                         .height(200.dp)
                         .width(200.dp),
                     pieChartData = PieChartData(
-                        slices = list!!.map {
+                        slices = list!!.mapIndexed() {index,it ->
                             PieChartData.Slice(
-                                50f,
-                                Color.Green
+                                it.amount.toFloat(),
+                                colorList[index],
                             )
                         }
                     ),
